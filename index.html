@@ -275,6 +275,23 @@
     border:1px solid var(--blueprint-line);
   }
   .card-img{ cursor:zoom-in; }
+
+
+  /* ---------- Flechas y contador de la galería del lightbox ---------- */
+.lightbox-arrow{
+  position:absolute; top:50%; transform:translateY(-50%);
+  background:rgba(255,255,255,0.08); border:1px solid var(--blueprint-line);
+  color:var(--paper); font-size:28px; width:48px; height:48px;
+  cursor:pointer; z-index:101;
+}
+.lightbox-arrow:hover{ border-color:var(--amber); color:var(--amber); }
+.lightbox-prev{ left:24px; }
+.lightbox-next{ right:24px; }
+.lightbox-counter{
+  position:absolute; bottom:24px; left:50%; transform:translateX(-50%);
+  font-family:'IBM Plex Mono', monospace; font-size:13px; color:var(--paper-dim);
+}
+  
 /* ---------- Foto de perfil ---------- */
 .profile-photo{
   width:120px; height:120px;
@@ -364,7 +381,8 @@
       <div class="projects-grid">
           <div class="card reveal">
               <span class="card-tag">Power BI</span>
-              <img src="Imagenes/DASHBOARD-PRODUCCION.png" alt="Dashboard de producción en Power BI" class="card-img"onclick="openLightbox('Imagenes/DASHBOARD-PRODUCCION.png', 'Dashboard de producción en Power BI')">
+             
+              <img src="imagenes/DASHBOARD-PRODUCCION.png" alt="Dashboard de producción en Power BI" class="card-img" onclick="openLightbox(['imagenes/DASHBOARD-PRODUCCION.png','imagenes/DASHBOARD-PRODUCCION.png','DASHBOARD-PRODUCCION.png'], 0, 'Dashboard de producción en Power BI')">
               <h3>Dashboard de producción</h3>
               <p>Tablero para monitorear OEE, tiempos muertos y rendimiento por línea de producción en tiempo casi real.</p>
               <div class="card-tools">
@@ -469,8 +487,12 @@
       </div>
     </div>
   </section>
-  <div id="lightbox" class="lightbox" onclick="closeLightbox()">
+ <div id="lightbox" class="lightbox" onclick="closeLightbox()">
+  <button class="lightbox-arrow lightbox-prev" onclick="prevImage(event)">‹</button>
   <img id="lightbox-img" src="" alt="">
+  <button class="lightbox-arrow lightbox-next" onclick="nextImage(event)">›</button>
+  <div id="lightbox-counter" class="lightbox-counter"></div>
+</div>
 </div>
 </main>
 
@@ -498,16 +520,43 @@
     navList.style.cssText += isOpen ? '' : 'position:absolute; top:64px; left:0; right:0; flex-direction:column; background:#12182B; padding:24px 32px; border-bottom:1px solid rgba(147,180,224,0.35); gap:18px;';
   });
   // Lightbox: opens and closes the enlarged image when clicked
-function openLightbox(src, alt){
+// Lightbox con galería: permite varias imágenes por proyecto, navegables con flechas
+let currentGallery = [];
+let currentIndex = 0;
+
+function openLightbox(images, startIndex, alt){
+  currentGallery = images; // array de rutas de imágenes
+  currentIndex = startIndex;
   const lb = document.getElementById('lightbox');
   const img = document.getElementById('lightbox-img');
-  img.src = src;
+  img.src = currentGallery[currentIndex];
   img.alt = alt;
   lb.classList.add('open');
+  updateLightboxCounter();
 }
 function closeLightbox(){
   document.getElementById('lightbox').classList.remove('open');
 }
+function nextImage(event){
+  event.stopPropagation(); // evita que se cierre el lightbox al usar la flecha
+  currentIndex = (currentIndex + 1) % currentGallery.length;
+  document.getElementById('lightbox-img').src = currentGallery[currentIndex];
+  updateLightboxCounter();
+}
+function prevImage(event){
+  event.stopPropagation();
+  currentIndex = (currentIndex - 1 + currentGallery.length) % currentGallery.length;
+  document.getElementById('lightbox-img').src = currentGallery[currentIndex];
+  updateLightboxCounter();
+}
+function updateLightboxCounter(){
+  document.getElementById('lightbox-counter').textContent = (currentIndex + 1) + ' / ' + currentGallery.length;
+}
+
+
+
+
+
 
 </script>
 </body>
