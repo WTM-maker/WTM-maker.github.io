@@ -122,6 +122,23 @@
   .lightbox.open{ display:flex; }
   .lightbox img{ max-width:90vw; max-height:90vh; object-fit:contain; border:1px solid var(--blueprint-line); }
 
+
+
+
+  .lightbox-arrow{
+  position:absolute; top:50%; transform:translateY(-50%);
+  background:rgba(255,255,255,0.08); border:1px solid var(--blueprint-line);
+  color:var(--paper); font-size:28px; width:48px; height:48px;
+  cursor:pointer; z-index:101;
+}
+.lightbox-arrow:hover{ border-color:var(--amber); color:var(--amber); }
+.lightbox-prev{ left:24px; }
+.lightbox-next{ right:24px; }
+.lightbox-counter{
+  position:absolute; bottom:24px; left:50%; transform:translateX(-50%);
+  font-family:'IBM Plex Mono', monospace; font-size:13px; color:var(--paper-dim);
+}
+
   @media (max-width: 640px){
     .evidence-grid{ grid-template-columns:1fr; }
   }
@@ -203,7 +220,7 @@
         <img src="Imagenes/DIAGRAMA DE RECORRIDO ACTUAL.png" alt="Diagrama de recorrido">
         <div class="evidence-caption">Diagrama de recorrido actual (DAP)</div>
       </div>
-      <div class="evidence-item" onclick="openLb('Imagenes/metodo-guerchet.png')">
+      <div class="evidence-item" onclick="openLb(['Imagenes/FACTOR MAQUINA Y FACTOR HOMBRE.png','Imagenes/FACTOR MATERIAL.png','Imagenes/ELEMENTOS.png','Imagenes/H1 ALTURA PROMEDIO MOVILES.png','Imagenes/H2 ALTURA MROMEDIO ELEMENT ESTATICOS.png','Imagenes/SUPERFICIE ESTATICA.png','Imagenes/SUPERFICIE GRAVITACION.png','Imagenes/SUPERFICIE DE EVOLUCION.png'])">
         <img src="Imagenes/metodo-guerchet.png" alt="Método Guerchet">
         <div class="evidence-caption">Método Guerchet</div>
       </div>
@@ -251,8 +268,12 @@
   </footer>
 </div>
 
+
 <div id="lightbox" class="lightbox" onclick="this.classList.remove('open')">
+  <button class="lightbox-arrow lightbox-prev" onclick="prevEv(event)">‹</button>
   <img id="lightbox-img" src="" alt="">
+  <button class="lightbox-arrow lightbox-next" onclick="nextEv(event)">›</button>
+  <div id="ev-counter" class="lightbox-counter"></div>
 </div>
 
 <script>
@@ -260,6 +281,32 @@
     document.getElementById('lightbox-img').src = src;
     document.getElementById('lightbox').classList.add('open');
   }
+let evGallery = [];
+let evIndex = 0;
+
+function openLb(images){
+  evGallery = Array.isArray(images) ? images : [images];
+  evIndex = 0;
+  document.getElementById('lightbox-img').src = evGallery[evIndex];
+  document.getElementById('lightbox').classList.add('open');
+  updateEvCounter();
+}
+function nextEv(event){
+  event.stopPropagation();
+  evIndex = (evIndex + 1) % evGallery.length;
+  document.getElementById('lightbox-img').src = evGallery[evIndex];
+  updateEvCounter();
+}
+function prevEv(event){
+  event.stopPropagation();
+  evIndex = (evIndex - 1 + evGallery.length) % evGallery.length;
+  document.getElementById('lightbox-img').src = evGallery[evIndex];
+  updateEvCounter();
+}
+function updateEvCounter(){
+  document.getElementById('ev-counter').textContent = evGallery.length > 1 ? (evIndex + 1) + ' / ' + evGallery.length : '';
+}
+  
 </script>
 </body>
 </html>
