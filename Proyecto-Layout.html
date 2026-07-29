@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rediseño de Layout de Planta · Wilson Tejada</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#12182B; --ink-2:#1B2340; --blueprint:#3E6BB0;
+    --blueprint-line: rgba(147,180,224,0.35); --amber:#FFB627;
+    --paper:#F5F3ED; --paper-dim:#C9C6BC; --steel:#8891A6; --success:#5FA88A;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; background:var(--ink); color:var(--paper);
+    font-family:'IBM Plex Sans', sans-serif; -webkit-font-smoothing:antialiased;
+  }
+  .mono{ font-family:'IBM Plex Mono', monospace; }
+  a{ color:inherit; }
+  .container{ max-width:840px; margin:0 auto; padding: 0 32px; }
+
+  /* Back link */
+  .back-link{
+    display:inline-flex; align-items:center; gap:8px;
+    font-family:'IBM Plex Mono', monospace; font-size:13px;
+    color:var(--paper-dim); text-decoration:none; padding: 32px 0 0;
+  }
+  .back-link:hover{ color:var(--amber); }
+
+  /* Header */
+  .case-header{ padding: 32px 0 56px; border-bottom:1px solid var(--blueprint-line); margin-bottom:56px;}
+  .case-tag{
+    font-family:'IBM Plex Mono', monospace; font-size:12px; letter-spacing:0.1em;
+    color:var(--amber); text-transform:uppercase; margin-bottom:16px;
+    display:flex; align-items:center; gap:10px;
+  }
+  .case-tag::before{ content:""; width:6px; height:6px; background:var(--amber); }
+  h1{
+    font-family:'IBM Plex Sans Condensed', sans-serif; font-weight:700;
+    font-size: clamp(32px, 5vw, 48px); line-height:1.1; margin:0 0 16px;
+  }
+  .case-sub{ color:var(--paper-dim); font-size:16px; max-width:600px; }
+
+  /* Sections */
+  .case-section{ margin-bottom:64px; }
+  .case-num{ font-family:'IBM Plex Mono', monospace; color:var(--blueprint); font-size:12px; margin-bottom:8px; }
+  h2{
+    font-family:'IBM Plex Sans Condensed', sans-serif; font-weight:700;
+    font-size: clamp(22px, 3vw, 28px); margin:0 0 20px;
+  }
+  .case-section p{ color:var(--paper-dim); line-height:1.75; font-size:16px; margin:0 0 12px; }
+
+  /* Rol - lista */
+  .rol-list{ list-style:none; padding:0; margin:0; display:grid; gap:0; border-top:1px solid var(--blueprint-line);}
+  .rol-list li{
+    padding:14px 0; border-bottom:1px solid var(--blueprint-line);
+    display:flex; align-items:baseline; gap:12px; color:var(--paper-dim); font-size:15px;
+  }
+  .rol-list li::before{ content:"→"; color:var(--amber); font-family:'IBM Plex Mono', monospace; }
+
+  /* Metodologia - flow */
+  .flow{ display:flex; flex-direction:column; border:1px solid var(--blueprint-line);}
+  .flow-step{
+    padding:18px 24px; border-bottom:1px solid var(--blueprint-line);
+    font-family:'IBM Plex Mono', monospace; font-size:14px;
+    display:flex; align-items:center; gap:16px;
+  }
+  .flow-step:last-child{ border-bottom:none; }
+  .flow-step .flow-num{ color:var(--amber); min-width:24px; }
+  .flow-arrow{ text-align:center; color:var(--steel); font-family:'IBM Plex Mono', monospace; padding:2px 0;}
+
+  /* Herramientas - chips */
+  .tool-chips{ display:flex; flex-wrap:wrap; gap:10px; }
+  .tool-chip{
+    font-family:'IBM Plex Mono', monospace; font-size:13px;
+    border:1px solid var(--blueprint-line); padding:8px 16px; color:var(--paper);
+  }
+
+  /* Evidencias - gallery */
+  .evidence-grid{ display:grid; grid-template-columns:repeat(2,1fr); gap:16px; }
+  .evidence-item{ border:1px solid var(--blueprint-line); overflow:hidden; cursor:zoom-in; }
+  .evidence-item img{ width:100%; aspect-ratio:4/3; object-fit:cover; display:block; transition:transform .3s; }
+  .evidence-item:hover img{ transform:scale(1.04); }
+  .evidence-caption{
+    font-family:'IBM Plex Mono', monospace; font-size:12px; color:var(--paper-dim);
+    padding:10px 14px; border-top:1px solid var(--blueprint-line);
+  }
+
+  /* Resultados - tabla */
+  table{ width:100%; border-collapse:collapse; font-size:14px; }
+  th, td{ padding:14px 16px; text-align:left; border-bottom:1px solid var(--blueprint-line); }
+  th{ font-family:'IBM Plex Mono', monospace; font-size:12px; text-transform:uppercase; letter-spacing:0.04em; color:var(--steel); font-weight:500;}
+  td{ color:var(--paper-dim); }
+  td.result-after{ color:var(--success); font-family:'IBM Plex Mono', monospace; }
+  tr:last-child td{ border-bottom:1px solid var(--blueprint-line); }
+
+  /* Conclusion */
+  .conclusion-box{
+    border-left:2px solid var(--amber); padding: 8px 0 8px 24px;
+  }
+  .conclusion-box p{ color:var(--paper); font-size:17px; line-height:1.7; margin:0;}
+
+  footer{
+    border-top:1px solid var(--blueprint-line); padding: 40px 0 60px;
+    text-align:center;
+  }
+  .btn{
+    font-family:'IBM Plex Mono', monospace; font-size:13px;
+    padding:14px 26px; text-decoration:none; display:inline-flex; align-items:center; gap:10px;
+    border:1px solid var(--amber); color:var(--ink); background:var(--amber);
+  }
+
+  /* Lightbox reused */
+  .lightbox{
+    display:none; position:fixed; inset:0; z-index:100;
+    background:rgba(18,24,43,0.92); align-items:center; justify-content:center;
+    padding:40px; cursor:zoom-out;
+  }
+  .lightbox.open{ display:flex; }
+  .lightbox img{ max-width:90vw; max-height:90vh; object-fit:contain; border:1px solid var(--blueprint-line); }
+
+  @media (max-width: 640px){
+    .evidence-grid{ grid-template-columns:1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <a href="index.html" class="back-link">← Volver al portafolio</a>
+
+  <header class="case-header">
+    <div class="case-tag">Ingeniería de procesos · AutoCAD / Excel</div>
+    <h1>Rediseño de Layout de Planta</h1>
+    <p class="case-sub">Caso completo: del problema en planta a la nueva distribución evaluada con datos.</p>
+  </header>
+
+  <section class="case-section">
+    <div class="case-num mono">01</div>
+    <h2>El problema</h2>
+    <p>La distribución existente generaba recorridos innecesarios entre estaciones de trabajo, incrementando los tiempos de traslado del material y dificultando el flujo continuo de producción.</p>
+  </section>
+
+  <section class="case-section">
+    <div class="case-num mono">02</div>
+    <h2>Objetivo</h2>
+    <p>Diseñar una nueva distribución de planta que minimizara los desplazamientos, mejorara la utilización del espacio disponible y optimizara el flujo del proceso productivo.</p>
+  </section>
+
+  <section class="case-section">
+    <div class="case-num mono">03</div>
+    <h2>Mi rol</h2>
+    <ul class="rol-list">
+      <li>Levantamiento de información</li>
+      <li>Análisis del proceso</li>
+      <li>Cálculo de áreas</li>
+      <li>Diseño del nuevo layout</li>
+      <li>Evaluación de alternativas</li>
+      <li>Elaboración de planos</li>
+    </ul>
+  </section>
+
+  <section class="case-section">
+    <div class="case-num mono">04</div>
+    <h2>Metodología</h2>
+    <div class="flow">
+      <div class="flow-step"><span class="flow-num">01</span> Levantamiento del proceso</div>
+      <div class="flow-step"><span class="flow-num">02</span> Análisis del flujo</div>
+      <div class="flow-step"><span class="flow-num">03</span> Método Guerchet</div>
+      <div class="flow-step"><span class="flow-num">04</span> Diagrama Relacional</div>
+      <div class="flow-step"><span class="flow-num">05</span> Diseño del Layout</div>
+      <div class="flow-step"><span class="flow-num">06</span> Evaluación</div>
+      <div class="flow-step"><span class="flow-num">07</span> Layout Final</div>
+    </div>
+  </section>
+
+  <section class="case-section">
+    <div class="case-num mono">05</div>
+    <h2>Herramientas</h2>
+    <div class="tool-chips">
+      <span class="tool-chip">AutoCAD</span>
+      <span class="tool-chip">Excel</span>
+      <span class="tool-chip">Método Guerchet</span>
+      <span class="tool-chip">SLP (Systematic Layout Planning)</span>
+      <span class="tool-chip">Diagrama de Recorrido</span>
+      <span class="tool-chip">Diagrama Relacional</span>
+      <span class="tool-chip">DAP</span>
+    </div>
+  </section>
+
+  <section class="case-section">
+    <div class="case-num mono">06</div>
+    <h2>Evidencias</h2>
+    <div class="evidence-grid">
+      <div class="evidence-item" onclick="openLb('imagenes/layout-actual.png')">
+        <img src="imagenes/layout-actual.png" alt="Layout actual">
+        <div class="evidence-caption">Layout actual</div>
+      </div>
+      <div class="evidence-item" onclick="openLb('imagenes/diagrama-recorrido.png')">
+        <img src="imagenes/diagrama-recorrido.png" alt="Diagrama de recorrido">
+        <div class="evidence-caption">Diagrama de recorrido</div>
+      </div>
+      <div class="evidence-item" onclick="openLb('imagenes/metodo-guerchet.png')">
+        <img src="imagenes/metodo-guerchet.png" alt="Método Guerchet">
+        <div class="evidence-caption">Método Guerchet</div>
+      </div>
+      <div class="evidence-item" onclick="openLb('imagenes/diagrama-relacional.png')">
+        <img src="imagenes/diagrama-relacional.png" alt="Diagrama relacional">
+        <div class="evidence-caption">Diagrama relacional</div>
+      </div>
+      <div class="evidence-item" onclick="openLb('imagenes/layout-propuesto.png')">
+        <img src="imagenes/layout-propuesto.png" alt="Layout propuesto en AutoCAD">
+        <div class="evidence-caption">Layout propuesto en AutoCAD</div>
+      </div>
+      <div class="evidence-item" onclick="openLb('imagenes/comparacion-antes-despues.png')">
+        <img src="imagenes/comparacion-antes-despues.png" alt="Comparación antes vs después">
+        <div class="evidence-caption">Comparación antes vs después</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="case-section">
+    <div class="case-num mono">07</div>
+    <h2>Resultados</h2>
+    <table>
+      <thead>
+        <tr><th>Indicador</th><th>Antes</th><th>Después</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Distancia recorrida</td><td>185 m</td><td class="result-after">112 m</td></tr>
+        <tr><td>Tiempo de traslado</td><td>12 min</td><td class="result-after">7 min</td></tr>
+        <tr><td>Utilización del espacio</td><td>68 %</td><td class="result-after">85 %</td></tr>
+        <tr><td>Cruces de materiales</td><td>15</td><td class="result-after">6</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="case-section">
+    <div class="case-num mono">08</div>
+    <h2>Conclusión</h2>
+    <div class="conclusion-box">
+      <p>La redistribución permitió mejorar el flujo de producción, reducir desplazamientos innecesarios y aprovechar de manera más eficiente el espacio disponible, contribuyendo a una operación más organizada.</p>
+    </div>
+  </section>
+
+  <footer>
+    <a href="index.html" class="btn">← Ver todos los proyectos</a>
+  </footer>
+</div>
+
+<div id="lightbox" class="lightbox" onclick="this.classList.remove('open')">
+  <img id="lightbox-img" src="" alt="">
+</div>
+
+<script>
+  function openLb(src){
+    document.getElementById('lightbox-img').src = src;
+    document.getElementById('lightbox').classList.add('open');
+  }
+</script>
+</body>
+</html>
